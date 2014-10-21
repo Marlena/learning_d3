@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>D3 page</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src='d3/d3.js'></script>
+<script type="text/javascript">
+
+    var dataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3];
+    var dataset2 = [25, 7, 5, 26, 11]
+
+    var graphWidth = 400;
+    var graphHeight = 100;
+    var barPadding = 1;
+
+    var xScale = d3.scale.ordinal()
+      .domain(d3.range(dataset.length))
+      .rangeRoundBands([0, graphWidth],.05); //last parameter is for the spaces between bars
+
+    var yScale = d3.scale.linear()
+      .domain([0, d3.max(dataset)])
+      .range([0, graphHeight]);
+
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width", graphWidth)
+            .attr("height", graphHeight);
+
+    svg.selectAll("rect")
+       .data(dataset)
+        .enter()
+        .append("rect")
+        .attr("x",  function(d, i){
+                return xScale(i);
+            })
+        .attr("y", function(d){
+                return graphHeight - yScale(d);
+        })
+        .attr("width", xScale.rangeBand())
+        .attr("height",  function(d){
+           return yScale(d);
+          })
+        .attr("fill", "teal");
+
+    svg.selectAll("text") //this looks like code from the book but
+            .data(dataset)
+            .enter()
+            .append("text")
+            .text(function(d){
+                return d;
+            })
+            .attr("text-anchor", "middle")
+            .attr("x", function(d, i){
+                return xScale(i) + xScale.rangeBand() / 2;
+            })
+            .attr("y", function(d){
+                return graphHeight - yScale(d) + 14;
+            })
+            .attr("font-family", "sans-serif")
+            .attr("font_size", "11px")
+            .attr("fill", "white")
+            .attr("text-anchor", "middle");
+
+
+
+</script>
+</body>
+</html>

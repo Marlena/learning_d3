@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <title>D3 page</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src='d3/d3.js'></script>
+<script type="text/javascript">
+
+  var originalDataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3];
+  var dataset = [25, 7, 5, 26, 11, 8]
+
+  var graphWidth = 400;
+  var graphHeight = 300;
+  var barPadding = 0.05;
+  var barHeight = 30;
+
+  var xScale = d3.scale.linear()
+    .domain([0, d3.max(dataset)])
+    .range([0, graphWidth]);
+
+  var yScale = d3.scale.ordinal()
+    .domain(d3.range(dataset.length))
+    .rangeRoundBands([0, graphHeight/2],0.05, 0);
+
+  var svg = d3.select("body")
+    .append("svg")
+    .attr("width", graphWidth)
+    .attr("height", graphHeight)
+
+  //create bars
+  svg.selectAll("g")
+    .data(dataset)
+    .enter()
+    /*
+      "g" is required for use with the transform.
+      The transform flips the bars so that the graph is horizontal.
+    */
+    .append("g")
+    .attr("transform", function(d,i){
+      return "translate(0," + barHeight + ")";
+    })
+    .append("rect")
+    .attr("y", function(d, i){
+      return yScale(i);
+    })
+
+    .attr("height", yScale.rangeBand())
+    .attr("width", function(d){
+      return xScale(d);
+    })
+    .attr("fill", "teal");
+
+
+
+
+</script>
+</body>
+</html>
