@@ -5,3 +5,29 @@ div.bar{
     background-color: slateblue;
     margin-right: 2px;
 }
+
+.top-label {
+    font-size: 13px;
+    font-style: italic;
+    text-transform: uppercase;
+    float: left;
+}
+.age-label {
+    text-align: right;
+    font-weight: bold;
+    width: 90px;
+    padding-right: 10px;
+}
+.clearfix {
+    clear: both;
+}
+.bar {
+    fill: DarkSlateBlue;
+}
+.bar-label {
+    text-anchor: end;
+}
+.axis-label {
+    text-anchor: middle;
+    font-size: 13px;
+}
