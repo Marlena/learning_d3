@@ -12,12 +12,12 @@
 
   var originalDataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3];
   var dataset = [25, 7, 5, 26, 11, 8]
-  var barLabels = ["Shade", "Half Shade", "Filtered Sun", "Half Sun", "Full Sun"]
+  var barLabels = ["Shade", "Half Shade", "Filtered Sun", "Half Sun", "Full Sun", "Fuller Sun"]
 
   var graphWidth = 500;
   var graphHeight = 300;
   var barPadding = 0.05;
-  var barHeight = 30;
+  var barHeight = 40;
   var tickGap = 5;
   var tickHeight = 10;
 
@@ -58,20 +58,25 @@
     .attr("fill", "teal");
 
   var leftMargin = 100;
-  var topMargin = 50;
-  var barLabelHeight = barHeight + 10;
-
+  var topMargin = 52;
+  //for the container of all bar labels, top margin lines it up with top bar
   var translateText = "translate(" + leftMargin + "," + topMargin + ")";
-  svg.append("g")
-    .attr("transform", translateText)
-    .attr("class", "bar-label")
+  var barSpacing = barHeight + barPadding;
 
-    for (var i = 0; i < barLabels.length; i++){
-      svg.append("text")
-        .attr("x", 0)
-        .attr("y", i  *  (barLabelHeight + barPadding))
-        .text(barLabels[i])
-    }
+  var barLabelGroup = svg.append("g")
+    .attr("transform", translateText)
+    .attr("class", "bar-label");
+
+  barLabelGroup.selectAll("text")
+    .data(barLabels)
+    .enter().append("text")
+    .attr("x", -10)
+    .attr("y", function(d,i){
+      //shrink the margin between each label by 2/3 to line up with bars
+      return i *  barHeight * (2/3);
+    })
+    .text(function(d) {return d});
+
 
 
 
