@@ -10,42 +10,46 @@
 <script src='d3/d3.js'></script>
 <script type="text/javascript">
 
-  var originalDataset = [25, 7, 5, 26, 11, 8, 25, 14, 23, 19, 14, 11, 22, 29, 11, 13, 12, 17, 18, 10, 24, 18, 25, 9, 3];
-  var dataset = [25, 7, 5, 26, 11, 8]
-  var barLabels = ["Shade", "Half Shade", "Filtered Sun", "Half Sun", "Full Sun", "Fuller Sun"]
+  var test_dataset = [25, 7, 5, 26, 11, 8];
+  var test_barLabels = ["Shade", "Half Shade", "Filtered Sun", "Half Sun", "Full Sun", "Fuller Sun"];
 
-  var graphWidth = 500;
-  var graphHeight = 300;
+  var sunniness = ["Empty", "Sun", "Semi-shade", "Shade"];
+  var sunniness_data = [3, 0, 4, 8];
+
+  var planting_type = ["empty", "seed", "seedling", "cutting",
+    "root division", "runner", "bulb", "root/tuber", "bare root plant",
+    "advanced plant", "graft", "layering"];
+  var planting_type_data = [12, 3, 8, 2, 9, 3, 2, 6, 3, 6, 2, 6];
+
+  var margin = {top: 30, right: 0, bottom: 0, left: 100};
+  var graphWidth = 500 - margin.left - margin.right;
+  var graphHeight = 350 - margin.top - margin.bottom;
   var barPadding = 0.05;
   var barHeight = 40;
   var tickGap = 5;
   var tickHeight = 10;
 
   var xScale = d3.scale.linear()
-    .domain([0, d3.max(dataset)])
+    .domain([0, d3.max(test_dataset)])
     .range([0, graphWidth]);
 
   var yScale = d3.scale.ordinal()
-    .domain(d3.range(dataset.length))
+    .domain(d3.range(test_dataset.length))
     .rangeRoundBands([0, graphHeight/2],0.05, 0);
 
   var svg = d3.select("body")
     .append("svg")
-    .attr("width", graphWidth)
-    .attr("height", graphHeight)
+      .attr("width", graphWidth + margin.left + margin.right)
+      .attr("height", graphHeight + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   //create bars
-  svg.selectAll("g")
-    .data(dataset)
+  var barGroup = svg.append("g")
+    .attr("class", "bar")
+    .selectAll("rect")
+    .data(test_dataset)
     .enter()
-    /*
-      NOTE: "g" is svg for grouping bars for use with the transform.
-      The transform flips the bars so that the graph is horizontal.
-    */
-    .append("g")
-    .attr("transform", function(d,i){
-      return "translate(100," + barHeight + ")";
-    })
     .append("rect")
     .attr("y", function(d, i){
       return yScale(i);
@@ -59,21 +63,21 @@
 
   var leftMargin = 100;
   var topMargin = 52;
-  //for the container of all bar labels, top margin lines it up with top bar
-  var translateText = "translate(" + leftMargin + "," + topMargin + ")";
   var barSpacing = barHeight + barPadding;
 
   var barLabelGroup = svg.append("g")
-    .attr("transform", translateText)
     .attr("class", "bar-label");
 
   barLabelGroup.selectAll("text")
-    .data(barLabels)
+    .data(test_barLabels)
     .enter().append("text")
     .attr("x", -10)
     .attr("y", function(d,i){
-      //shrink the margin between each label by 2/3 to line up with bars
-      return i *  barHeight * (2/3);
+      //shrink the margin between each label to give them a spread even with bars
+      var barLabelSpread = 2/3;
+      //move them downward to line up with bars.
+      var barLabelTopEdge = 17;
+      return i *  barHeight * (barLabelSpread) + barLabelTopEdge;
     })
     .text(function(d) {return d});
 
